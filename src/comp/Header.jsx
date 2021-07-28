@@ -56,7 +56,11 @@ const Header = () => {
                             <span>Series</span>
                         </a>
                     </NavMenu>
-                    <UserImg src={userphoto} />
+                    <LoginUser>
+                        <UserImg src={userphoto} />
+                        <span>{username}</span>
+                    </LoginUser>
+
                 </>
             )}
 
@@ -160,6 +164,18 @@ transition: all 0.2s ease 0s;
 `
 const UserImg = styled.img`
 height: 50%;
-border-radius: 50%;
+/* border-radius: 50%; */
+object-fit: contain;
 
+`
+const LoginUser = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
+height: 50px;
+width: 40px;
+span{
+    font-size: 10px;
+    margin-top: 7px;
+}
 `
