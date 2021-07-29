@@ -3,16 +3,33 @@ import styled from 'styled-components'
 import { auth, provider } from '../firebase'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { selectUserName, selectUserPhoto, setUserLoginDetails } from '../redux/userSlice'
+import { selectUserName, selectUserPhoto, setSignOutState, setUserLoginDetails } from '../redux/userSlice'
+import { useEffect } from 'react'
 const Header = () => {
     const history = useHistory()
     const dispatch = useDispatch()
     const username = useSelector(selectUserName)
     const userphoto = useSelector(selectUserPhoto)
+    useEffect(() => {
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                setUser(user)
+                history.push('/home')
+            }
+        })
+    }, [username])
     const handleAuth = () => {
-        auth.signInWithPopup(provider)
-            .then(result => setUser(result.user))
-            .catch(error => alert(error.message))
+        if (!username) {
+            auth.signInWithPopup(provider)
+                .then(result => setUser(result.user))
+                .catch(error => alert(error.message))
+        } else if (username) {
+            auth.signOut().then(() => {
+                dispatch(setSignOutState())
+                history.push('/')
+            }).catch(error => alert(error.message))
+        }
+
     }
     const setUser = (user) => {
         dispatch(setUserLoginDetails({
@@ -56,10 +73,12 @@ const Header = () => {
                             <span>Series</span>
                         </a>
                     </NavMenu>
-                    <LoginUser>
+                    <SignOut>
                         <UserImg src={userphoto} />
-                        <span>{username}</span>
-                    </LoginUser>
+                        <DropDown>
+                            <span onClick={handleAuth}>Sign Out</span>
+                        </DropDown>
+                    </SignOut>
 
                 </>
             )}
@@ -163,19 +182,43 @@ transition: all 0.2s ease 0s;
 }
 `
 const UserImg = styled.img`
-height: 50%;
 /* border-radius: 50%; */
 object-fit: contain;
-
 `
-const LoginUser = styled.div`
+const DropDown = styled.div`
+position: absolute;
+top: 48px;
+right: 0;
+background: rgb(19,19,19);
+border: 1px solid rgba(151,151,151,0.3);
+border-radius: 4px;
+font-size: 14px;
+padding: 5px;
+letter-spacing: 3px ;
+width: 100px;
+max-width: 100px;
+opacity: 0;
+max-height: 30px;
+box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+`
+const SignOut = styled.div`
+height: 48px;
+width:48px;
+position: relative;
 display: flex;
-flex-direction: column;
+cursor: pointer;
+align-items: center;
 justify-content: center;
-height: 50px;
-width: 40px;
-span{
-    font-size: 10px;
-    margin-top: 7px;
+${UserImg}{
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+}
+&:hover{
+    ${DropDown}{
+        opacity: 1;
+        transition-duration: 1s;
+        opacity: 1;
+    }
 }
 `
