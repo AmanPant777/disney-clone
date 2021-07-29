@@ -1,14 +1,17 @@
 import React from 'react'
 import styled from 'styled-components'
 import ImgSlider from './ImgSlider'
+import Viewers from './Viewers'
+import Recommend from './Recommend'
 const Home = () => {
     return (
         <Container>
             <ImgSlider />
+            <Viewers />
+            <Recommend />
         </Container>
     )
 }
-
 export default Home
 const Container = styled.main`
 min-height: calc(100vh-250px);
