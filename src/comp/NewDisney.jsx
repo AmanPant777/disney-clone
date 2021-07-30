@@ -2,10 +2,10 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
-const Recommend = () => {
+const NewDisney = () => {
     return (
         <Container>
-            <h4>Recommended For You</h4>
+            <h4>New Disney+</h4>
             <Content>
                 <Wrap>
                     <Link to='/'>
@@ -31,7 +31,7 @@ const Recommend = () => {
         </Container>
     )
 }
-export default Recommend
+export default NewDisney
 const Container = styled.div`
 padding: 0 0 26px;
 `
